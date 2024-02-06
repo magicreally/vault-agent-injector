@@ -30,11 +30,11 @@ This tutorial requires:
 **Clone GitHub repositories**
 Retrieve the all yaml file from my github repository
  ```bash
-git clone https://github.com/hashicorp-education/learn-vault-kubernetes-sidecar.git
+git clone https://github.com/magicreally/vault-agent-injector.git
 ```
 Move into the clones repository.
 ```bash
- cd learn-vault-kubernetes-sidecar
+ cd vault-agent-injector
  ```
 **Start Minikube**
 Minikube is a CLI tool that provisions and manages the lifecycle of single-node Kubernetes clusters locally inside Virtual Machines (VM) on your system.
