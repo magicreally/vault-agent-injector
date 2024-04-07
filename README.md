@@ -1,5 +1,7 @@
-**Injecting Secrets into Kubernetes Pods via Vault Helm Sidecar**
-Using Vault for secret management in applications involves:
+**what we did**
+ the primary objective was to enhance the security of authentication mechanisms within the application by transitioning from the use of Base64 encoding to more robust encryption methods such as AES-256 or another method of encryption. To achieve this, I used of the capabilities of the Transit engine provided by Vault, a highly secure and scalable secrets management solution. The Transit engine allows for encryption and decryption operations on data payloads, providing a seamless way to integrate advanced encryption techniques into the authentication process.
+
+**Using Vault for secret management in applications involves:**
 
 Logging in and getting a token.
 Handling the token's lifecycle.
@@ -7,7 +9,7 @@ Getting secrets from Vault.
 Managing the duration of dynamic secrets.
 Vault Agent simplifies these tasks, ensuring applications don't need to know about Vault. But you must install and configure Vault Agent alongside applications as a sidecar.
 
-The Vault Helm chart helps run Vault and the Vault Agent Sidecar Injector. This injector, using the Sidecar container pattern and Kubernetes mutating admission webhook, adds a Vault Agent container to pods with specific notes to manage secrets.
+The Vault Helm chart helps to run Vault and the Vault Agent Sidecar Injector. This injector, using the Sidecar container pattern and Kubernetes mutating admission webhook, adds a Vault Agent container to pods with specific notes to manage secrets.
 
 Benefits include:
 
@@ -36,26 +38,6 @@ Move into the clones repository.
 ```bash
  cd vault-agent-injector
  ```
-**Start Minikube**
-Minikube is a CLI tool that provisions and manages the lifecycle of single-node Kubernetes clusters locally inside Virtual Machines (VM) on your system.
-
-Start a Kubernetes cluster.
-```bash
-minikube start
-```
-```console
-😄  minikube v1.30.1 on Darwin 13.3.1 (arm64)
-✨  Using the docker driver based on existing profile
-👍  Starting control plane node minikube in cluster minikube
-🚜  Pulling base image ...
-🔄  Restarting existing docker container for "minikube" ...
-🐳  Preparing Kubernetes v1.26.3 on Docker 23.0.2 ...
-🔗  Configuring bridge CNI (Container Networking Interface) ...
-🔎  Verifying Kubernetes components...
-   ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
-🌟  Enabled addons: storage-provisioner, default-storageclass
-🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-```
 **Install the Vault Helm chart**
 The most advisable method for deploying Vault on Kubernetes is through the use of the Helm chart. Helm serves as a package manager, facilitating the installation and configuration of all essential components for running Vault in various modes. A Helm chart comprises templates allowing for conditional and parameterized execution. These parameters can be configured either through command-line inputs or specified in YAML files.
 
