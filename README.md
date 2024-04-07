@@ -1,4 +1,5 @@
 **what we did**
+
  the primary objective was to enhance the security of authentication mechanisms within the application by transitioning from the use of Base64 encoding to more robust encryption methods such as AES-256 or another method of encryption. To achieve this, I used of the capabilities of the Transit engine provided by Vault, a highly secure and scalable secrets management solution. The Transit engine allows for encryption and decryption operations on data payloads, providing a seamless way to integrate advanced encryption techniques into the authentication process.
 
 **Using Vault for secret management in applications involves:**
