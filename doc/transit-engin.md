@@ -45,7 +45,9 @@ To perform the tasks described in this tutorial, you need to have the following:
 
 Complete the **lab setup** section to use either a Vault dev mode server or HCP Vault cluster
 jq installed
+
 **Lab setup**
+
 Open a terminal and start a Vault dev server with root as the root token.
 
 ```bash 
