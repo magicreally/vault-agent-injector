@@ -1,8 +1,8 @@
- **Problem**
-
+ ***Problem**
+```note
  change default Vault encryption from base64 to aes-256
-
-**What we did**
+```
+***What we did?**
 
  the primary objective was to enhance the security of authentication mechanisms within the application by transitioning from the use of Base64 encoding to more robust encryption methods such as AES-256 or another method of encryption. To achieve this, I used of the capabilities of the Transit engine provided by Vault, a highly secure and scalable secrets management solution. The Transit engine allows for encryption and decryption operations on data payloads, providing a seamless way to integrate advanced encryption techniques into the authentication process.
 
@@ -53,6 +53,7 @@ This tutorial requires:
 
  
 **Clone GitHub repositories**
+
 Retrieve the all yaml file from my github repository
  ```bash
 git clone https://github.com/magicreally/vault-agent-injector.git
@@ -197,6 +198,7 @@ command terminated with exit code 1
 ```
 
 **6: Inject secrets into the pod**
+
 The deployment is running the pod with the internal-app Kubernetes service account in the default namespace. The Vault Agent Injector only modifies a deployment if it contains a specific set of annotations. An existing deployment may have its definition patched to include the necessary annotations.
 **6.1** Display the deployment patch patch-inject-secrets.yaml.
 ```bash
