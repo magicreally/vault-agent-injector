@@ -1,5 +1,3 @@
-[Back](../README.md)
-
 To Strat, stop and delete minikube 
 
  ```bash
@@ -286,5 +284,3 @@ spec: # specification for deployment
             - containerPort: 80 
 
  ```
-
- [Back](../README.md)

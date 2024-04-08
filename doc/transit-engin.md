@@ -1,12 +1,14 @@
-[Back](../README.md)
 
 **Transit secrets engine**
+
 The transit secrets engine in Vault provides "cryptography as a service" for data in transit, handling encryption, decryption, signing, verification, and more. It encrypts data from applications, storing the encrypted data in a primary data store, and supports key derivation for versatile key usage. Convergent encryption ensures consistent ciphertext with the same input values. The engine also allows datakey generation, providing high-entropy keys encrypted with a named key, with the option to return the key in plaintext for immediate use or disable for auditing compliance.
 
 **Working set management**
+
 The Transit engine supports versioning of keys. Key versions that are earlier than a key's specified min_decryption_version gets archived, and the rest of the key versions belong to the working set. This is a performance consideration to keep key loading fast, as well as a security consideration: by disallowing decryption of old versions of keys, found ciphertext corresponding to obsolete (but sensitive) data can not be decrypted by most users, but in an emergency the min_decryption_version can be moved back to allow for legitimate decryption.
 
 **Key types**
+
 As of now, the transit secrets engine supports the following key types (all key types also generate separate HMAC keys):
 
 `aes128-gcm96:` AES-GCM with a 128-bit AES key and a 96-bit nonce; supports encryption, decryption, key derivation, and convergent encryption
@@ -30,12 +32,17 @@ RSA operations use one of the following methods:
 OAEP (encrypt, decrypt), with SHA-256 hash function and MGF,
 PSS (sign, verify), with configurable hash function also used for MGF, and
 PKCS#1v1.5: (sign, verify), with configurable hash function.
+
 **Convergent encryption**
+
 Convergent encryption is a mode where the same set of plaintext+context always result in the same ciphertext.
+
 **Prerequisites**
+
 To perform the tasks described in this tutorial, you need to have the following:
 
 **Vault** installed
+
 Complete the **lab setup** section to use either a Vault dev mode server or HCP Vault cluster
 jq installed
 **Lab setup**
@@ -62,8 +69,11 @@ export VAULT_TOKEN=root
 ```
 
 The Vault server is ready.
+
 **Configure transit secrets engine**
+
 **Setup**
+
 Most secrets engines must be configured in advance before they can perform their functions. These steps are usually completed by an operator or configuration management tool.
 Enable the Transit secrets engine:
 ```bash 
@@ -81,6 +91,7 @@ Create an encryption key ring named orders by executing the following command.
  vault write -f transit/keys/orders
 ```
 **Create a token for Vault clients**
+
 Vault clients must authenticate with Vault and acquire a valid token with appropriate policies allowing to request data encryption and decryption using the specific key.
 ![alt text](https://developer.hashicorp.com/_next/image?url=https%3A%2F%2Fcontent.hashicorp.com%2Fapi%2Fassets%3Fproduct%3Dtutorials%26version%3Dmain%26asset%3Dpublic%252Fimg%252Fvault%252Fvault-transit-13.png%26width%3D2313%26height%3D429&w=3840&q=75)
 When the transit secrets engine is enabled at transit, the policy must include the following:
@@ -142,6 +153,7 @@ Retrieve the transit wrapping key
  vault read transit/wrapping_key
 ```
 This returns a 4096-bit RSA key.
+
 **Encrypt** some plaintext data using the /encrypt endpoint with a named key:
 ```bash
 vault write transit/encrypt/my-key plaintext=$(echo "my secret data" | base64)
@@ -220,4 +232,3 @@ spec:
         cpu: "5m"
 ```
 
-[Back](../README.md)
