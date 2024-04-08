@@ -3,6 +3,7 @@
  change default Vault encryption from base64 to aes-256
 
 **What we did**
+
  the primary objective was to enhance the security of authentication mechanisms within the application by transitioning from the use of Base64 encoding to more robust encryption methods such as AES-256 or another method of encryption. To achieve this, I used of the capabilities of the Transit engine provided by Vault, a highly secure and scalable secrets management solution. The Transit engine allows for encryption and decryption operations on data payloads, providing a seamless way to integrate advanced encryption techniques into the authentication process.
 
   As vault only use of base64 decoding and do not support of another encryption I used of transit engine to encrypt a plain text to a ciphertext and then store it in the vault as value of a key. If you are interested in to realize how it is work, you can check automat bash script and read the comment. As it so like the vault injector and transit engine documentation we avoid of repetitive text in here.
