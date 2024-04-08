@@ -65,19 +65,19 @@ Move into the clones repository.
 
 The most advisable method for deploying Vault on Kubernetes is through the use of the Helm chart. Helm serves as a package manager, facilitating the installation and configuration of all essential components for running Vault in various modes. A Helm chart comprises templates allowing for conditional and parameterized execution. These parameters can be configured either through command-line inputs or specified in YAML files.
 
-1. Add the HashiCorp Helm repository.
+**1.1** Add the HashiCorp Helm repository.
 ```bash
 helm repo add hashicorp https://helm.releases.hashicorp.com
 ```
-2. Update all the repositories to ensure helm is aware of the latest versions
+**1.2**  Update all the repositories to ensure helm is aware of the latest versions
 ```bash
 helm repo update
 ```
-3. install the latest version of the Vault server running in development mode.
+**1.3** install the latest version of the Vault server running in development mode.
 ```bash
 helm install vault hashicorp/vault --set "server.dev.enabled=true"
 ```
-4. Display all the pods in the default namespace.
+**1.4** Display all the pods in the default namespace.
 ```bash
 kubectl get pods
 ```
@@ -90,45 +90,45 @@ The vault-0 pod runs a Vault server in development mode. The vault-agent-injecto
  
  **2: Set a secret in Vault**
 
- 1. Start an interactive shell session on the vault-0 pod.
+ **2.1** Start an interactive shell session on the vault-0 pod.
 ```bash
 kubectl exec -it vault-0 -- /bin/sh
 ```
- 2. Enable kv-v2 secrets at the path internal.
+ **2.2** Enable kv-v2 secrets at the path internal.
 ```bash
 vault secrets enable -path=internal kv-v2
 ```
- 3. Create a secret at path internal/database/config with a username and password.
+ **2.3** Create a secret at path internal/database/config with a username and password.
 ```bash
 vault kv put internal/database/config username="db-readonly-username" password="db-secret-password"
 ```
- 4. Verify that the secret is defined at the path internal/database/config.
+ **2.4** Verify that the secret is defined at the path internal/database/config.
 
 ```bash
 vault kv get internal/database/config
 ```
-5. Lastly, exit the vault-0 pod.
+**2.5** Lastly, exit the vault-0 pod.
 ```bash
 exit
 ```
 **3: Configure Kubernetes authentication**
 
-1. Start an interactive shell session on the vault-0 pod.
+**3.1** Start an interactive shell session on the vault-0 pod.
 ```bash
  kubectl exec -it vault-0 -- /bin/sh
  ```
-2. Enable the Kubernetes authentication method.
+**3.2** Enable the Kubernetes authentication method.
 ```bash
  vault auth enable kubernetes
  ```
- 3. Configure the Kubernetes authentication method to use the location of the Kubernetes API.
+ **3.3** Configure the Kubernetes authentication method to use the location of the Kubernetes API.
 
 ```bash
  vault write auth/kubernetes/config \
       kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443"
 ```      
 
-4. Write out the policy named internal-app that enables the read capability for secrets at path internal/data/database/config.
+**3.4** Write out the policy named internal-app that enables the read capability for secrets at path internal/data/database/config.
 ```bash
  vault policy write internal-app - <<EOF
 path "internal/data/database/config" {
@@ -136,7 +136,7 @@ path "internal/data/database/config" {
 }
 EOF
 ```
-5. Create a Kubernetes authentication role named internal-app.
+**3.5** Create a Kubernetes authentication role named internal-app.
 ```bash
 vault write auth/kubernetes/role/internal-app \
       bound_service_account_names=internal-app \
@@ -144,7 +144,7 @@ vault write auth/kubernetes/role/internal-app \
       policies=internal-app \
       ttl=24h
 ```
-6. Lastly, exit the vault-0 pod.
+**3.6** Lastly, exit the vault-0 pod.
 ```bash
 exit
 ```
@@ -153,15 +153,15 @@ exit
 The Vault Kubernetes authentication role defined a Kubernetes service account named internal-app.
 
 A service account provides an identity for processes that run in a Pod. With this identity we will be able to run the application within the cluster.
-1. Get all the service accounts in the default namespace.
+**4.1** Get all the service accounts in the default namespace.
 ```bash
 kubectl get serviceaccounts
 ```
-2. Create a Kubernetes service account named internal-app in the default namespace.
+**4.2** Create a Kubernetes service account named internal-app in the default namespace.
 ```bash
 kubectl create sa internal-app
 ```
-3. Verify that the service account has been created.
+**4.3** Verify that the service account has been created.
 
 ```bash
 kubectl get serviceaccounts
@@ -170,20 +170,20 @@ kubectl get serviceaccounts
 
 You have created a sample application, published it to DockerHub, and created a Kubernetes deployment that launches this application.
 
-1. Display the deployment for the orgchart application.
+**5.1** Display the deployment for the orgchart application.
 ```bash
 cat deployment-orgchart.yaml
 ```
-2. Apply the deployment defined in deployment-orgchart.yaml.
+**5.2** Apply the deployment defined in deployment-orgchart.yaml.
 ```bash
 kubectl apply --filename deployment-orgchart.yaml
 ```
-3. Get all the pods in the default namespace and note down the name of the pod with a name prefixed with "orgchart-".
+**5.3** Get all the pods in the default namespace and note down the name of the pod with a name prefixed with "orgchart-".
 
 ```bash
 kubectl get pods
 ```
-4. Verify that no secrets are written to the orgchart container in the orgchart pod.
+**5.4** Verify that no secrets are written to the orgchart container in the orgchart pod.
 
 ```bash
 kubectl exec \
@@ -198,29 +198,29 @@ command terminated with exit code 1
 
 **6: Inject secrets into the pod**
 The deployment is running the pod with the internal-app Kubernetes service account in the default namespace. The Vault Agent Injector only modifies a deployment if it contains a specific set of annotations. An existing deployment may have its definition patched to include the necessary annotations.
-1. Display the deployment patch patch-inject-secrets.yaml.
+**6.1** Display the deployment patch patch-inject-secrets.yaml.
 ```bash
 cat patch-inject-secrets.yaml
 ```
-2. Patch the orgchart deployment defined in patch-inject-secrets.yaml.
+**6.2** Patch the orgchart deployment defined in patch-inject-secrets.yaml.
 ```bash
 kubectl patch deployment orgchart --patch "$(cat patch-inject-secrets.yaml)"
 ```
 A new orgchart pod starts alongside the existing pod. When it is ready the original terminates and removes itself from the list of active pods.
-3. Get all the pods in the default namespace.
+**6.3** Get all the pods in the default namespace.
 ```bash
 kubectl get pods
 ```
 Wait until the re-deployed orgchart pod reports that it is Running and ready (2/2).
 
 This new pod now launches two containers. The application container, named orgchart, and the Vault Agent container, named vault-agent.
-4. Display the logs of the vault-agent container in the new orgchart pod.
+**6.4** Display the logs of the vault-agent container in the new orgchart pod.
 ```bash
 kubectl logs \
       $(kubectl get pod -l app=orgchart -o jsonpath="{.items[0].metadata.name}") \
       --container vault-agent
 ```
-5. Display the secret written to the orgchart container.
+**6.5** Display the secret written to the orgchart container.
 ```bash
 kubectl exec \
       $(kubectl get pod -l app=orgchart -o jsonpath="{.items[0].metadata.name}") \
